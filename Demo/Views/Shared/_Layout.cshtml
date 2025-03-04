@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+</head>
+<body>
+    @*Start Header*@
+    @*HTML Tags*@
+   @*  <center> 
+        <div class="m-5">
+            <a class="btn btn-primary" href="/Home/Index">Home</a>
+            <a class="btn btn-success" href="/Home/AboutUs">About Us</a>
+            <a class="btn btn-danger" href="/Home/ContactUs">Contact Us</a>
+            <a class="btn btn-warning" href="/Home/Privacy">Privacy</a>
+        </div>
+    </center> *@
+    @*End Header*@
+
+    @*HTML Helper*@
+   @*  <center>
+        <nav class="mt-5">
+            @Html.ActionLink("Home","Index","Home",null,new {@class="btn btn-primary"})
+            @Html.ActionLink("About Us", "AboutUs", "Home", null, new { @class = "btn btn-success" })
+            @Html.ActionLink("Contact Us", "ContactUs", "Home", null, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Privacy", "Privacy", "Home", null, new { @class = "btn btn-danger" })
+        </nav>
+    </center> *@
+
+    @*Tag helper*@ 
+    <center>
+        <nav class="mt-5">
+            <a asp-controller="Home"asp-action="Index" class="btn btn-primary" >Home</a>
+            <a asp-controller="Home" asp-action="AboutUs" class="btn btn-success">About Us</a>
+            <a asp-controller="Home" asp-action="ContactUs" class="btn btn-danger">Contact Us</a>
+            <a asp-controller="Home" asp-action="Privacy" class="btn btn-warning">Privacy</a>
+        </nav>
+    </center>
+
+    <div>
+        @RenderBody()
+    </div>
+
+    @*Start Footer*@
+    <center>
+        <div class="m-5">
+            <p>copyrights &copy; Route @DateTime.Now.Year</p>
+        </div>
+    </center>
+    @*End Footer*@
+</body>
+</html>
