@@ -11,10 +11,11 @@ namespace Company.G02.BLL.Repositories
 {
     public class DepartmentRepository : IDepartmentRepository
     {
-        private readonly CompanyDbContext _context;
-        public DepartmentRepository()
+        private readonly CompanyDbContext _context; //Null
+        //Asdk Clr to create an object from CompanyDbContext
+        public DepartmentRepository(CompanyDbContext context)
         {
-            _context = new CompanyDbContext();
+            _context = context;
         }
         public IEnumerable<Department> GetAll()
         {
