@@ -24,7 +24,7 @@ namespace Company.G02.PL
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
