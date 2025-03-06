@@ -20,6 +20,7 @@ namespace Company.G02.PL.Controllers
         {
             var departments = _departmentRepository.GetAll();
 
+
             return View(departments);
         }
     }
