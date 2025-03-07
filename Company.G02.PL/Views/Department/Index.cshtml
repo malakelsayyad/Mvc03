@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<Department>
 
+
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -33,7 +35,7 @@
                     <td>@item.Name</td>
                     <td>@item.CreatedAt</td>
                     <td>
-                        <a asp-action="Details" class="btn btn-warning">Details</a>
+                        <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.Id">Details</a>
                     </td>
                     <td>
                         <a asp-action="Edit" class="btn btn-success">Update</a>

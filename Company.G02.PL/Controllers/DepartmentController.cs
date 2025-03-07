@@ -34,7 +34,7 @@ namespace Company.G02.PL.Controllers
         [HttpPost]
         public IActionResult Create(CreateDepartmentDto model)
         {
-            if (ModelState.IsValid) //Server side validation
+            if ( ModelState.IsValid) //Server side validation
             {   
                 var department=new Department() 
                 {
@@ -49,6 +49,19 @@ namespace Company.G02.PL.Controllers
                 }
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Details(DetailsDepartmentDto departmentDto) 
+        {
+            var department = _departmentRepository.GetById(departmentDto.Id);
+            var departmentDetailsDto = new DetailsDepartmentDto
+            {
+                Code= department.Code,
+                Name = department.Name,
+            };
+
+            return View(departmentDetailsDto);
         }
     }
 }
