@@ -21,7 +21,7 @@ namespace Company.G02.BLL.Repositories
         {
             return _context.Departments.ToList();
         }
-        public Department? Get(int id)
+        public Department? GetById(int id)
         {
             return _context.Departments.Find(id);
         }
