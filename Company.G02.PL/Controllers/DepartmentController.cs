@@ -59,6 +59,7 @@ namespace Company.G02.PL.Controllers
             {
                 Code= department.Code,
                 Name = department.Name,
+                CreatedAt = department.CreatedAt,
             };
 
             return View(departmentDetailsDto);
