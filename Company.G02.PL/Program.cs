@@ -16,7 +16,8 @@ namespace Company.G02.PL
             builder.Services.AddControllersWithViews();//Register built-in mvc services
             
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();//Allows Dependancy Injection for DepartmentRepository
-            
+            builder.Services.AddScoped<IEmployeeRepository,EmployeeRepository>();//Allows Dependancy Injection for EmployeeRepository
+
             builder.Services.AddDbContext<CompanyDbContext>(options => 
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

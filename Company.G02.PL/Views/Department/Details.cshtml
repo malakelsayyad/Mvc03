@@ -4,24 +4,25 @@
 }
 
 <h1>Details</h1>
+<br />
 <div>
-    <div class="my-3">
+    <div class="form-group">
         <label asp-for="Code" class="col-form-label"></label>
-        <input asp-for="Code" class="form-control" readonly />
+        <input readonly asp-for="Code" class="form-control" />
+        <span asp-validation-for="Code" class="text-danger"></span>
     </div>
-    <div class="my-3">
+    <div class="form-group">
         <label asp-for="Name" class="col-form-label"></label>
-        <input asp-for="Name" class="form-control" readonly />
-
+        <input readonly asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div class="my-3">
+    <div class="form-group">
         <label asp-for="CreatedAt" class="col-form-label"></label>
-        <input asp-for="CreatedAt" class="form-control" readonly />
+        <input readonly asp-for="CreatedAt" class="form-control" />
     </div>
-    <div class="my-3 ">
-        <a asp-controller="Department" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-        <a asp-action="Index" class="btn btn-light">Back to List</a>
-    </div>
+    <br />
+    <a asp-controller="Department" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-controller="Department" asp-action="Index" class="btn btn-light">Back To List</a>
+
 
 </div>
-
