@@ -80,27 +80,39 @@ namespace Company.G02.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            //if (id is null) return BadRequest("Invalid Id");
-            //var department = _departmentRepository.GetById(id.Value);
-            //if (department is null) return NotFound(new { statusCode = 404, message = $"Department with id {id} is not found" });
-            
-            
-            return Details(id,"Edit");
+            if (id is null) return BadRequest("Invalid Id");
+            var department = _departmentRepository.GetById(id.Value);
+            if (department is null) return NotFound(new { statusCode = 404, message = $"department with id {id} is not found" });
+
+            var departmentDto = new CreateDepartmentDto()
+            {
+                Code=department.Code,
+                Name = department.Name,
+                CreatedAt=department.CreatedAt,
+            };
+            return View(departmentDto);
         }
 
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public IActionResult Edit([FromRoute] int id, CreateDepartmentDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != department.Id) return BadRequest();
+                //if (id != employee.Id) return BadRequest();
+                var department = new Department()
+                {
+                    Id = id,
+                    Name = model.Name,
+                    Code = model.Code,
+                    CreatedAt = model.CreatedAt,
+                };
                 var count = _departmentRepository.Update(department);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
-            return View(department);
+            return View(model);
         }
 
         //[HttpPost]

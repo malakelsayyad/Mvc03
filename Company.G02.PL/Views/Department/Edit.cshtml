@@ -1,4 +1,4 @@
-﻿@model Department
+﻿@model CreateDepartmentDto
 @{
     ViewData["Title"] = "Edit";
 }
@@ -8,21 +8,8 @@
 <br />
 
 <form asp-action="Edit">
-    <div class="form-group">
-        <label asp-for="Code" class="col-form-label"></label>
-        <input asp-for="Code" class="form-control" />
-        <span asp-validation-for="Code" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Name" class="col-form-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="CreatedAt" class="col-form-label"></label>
-        <input asp-for="CreatedAt" class="form-control" />
-    </div>
-    <br />
+    <partial name="DepartmentPartialView/_CreateEditPartialView" />
+
     <input type="submit" value="Save" class="btn btn-primary" />
     <a asp-controller="Department" asp-action="Index" class="btn btn-light">Back To List</a>
 </form>
