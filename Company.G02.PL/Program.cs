@@ -1,6 +1,8 @@
 using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Data.Context;
+using Company.G02.PL.Mapping;
+using Company.G02.PL.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -22,6 +24,19 @@ namespace Company.G02.PL
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });//Allows Dependancy Injection for CompanyDbContext
+
+
+            //builder.Services.AddScoped(); // Create object its lifetime per request - Unreachable
+            //builder.Services.AddTransient(); //Create object its lifetime per operation
+            //builder.Services.AddSingleton(); //Create object its lifetime per App
+
+            //builder.Services.AddScoped<IScopedService,ScopedService>(); // Per request
+            //builder.Services.AddTransient<ITransientService,TransientService>();// Per operation
+            //builder.Services.AddSingleton<ISingletonService, SingletonService>();// Per App
+
+            //builder.Services.AddAutoMapper(typeof(EmployeeProfile));
+            builder.Services.AddAutoMapper(M=>M.AddProfile(new EmployeeProfile()));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

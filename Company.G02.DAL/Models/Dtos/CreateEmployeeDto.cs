@@ -11,7 +11,7 @@ namespace Company.G02.DAL.Models.Dtos
     public class CreateEmployeeDto
     {
         [Required(ErrorMessage ="Name is required !")]
-        public string Name { get; set; }
+        public string EmpName { get; set; }
         
         [Range(22,60, ErrorMessage ="Age must be between 22 and 60")]
         public int? Age { get; set; }
@@ -35,7 +35,11 @@ namespace Company.G02.DAL.Models.Dtos
         public DateTime HiringDate { get; set; }
 
         [DisplayName("Date of creation")]
-
         public DateTime CreatedAt { get; set; }
+        
+        [DisplayName("Department")]
+        public int? DepartmentId { get; set; }
+
+
     }
 }

@@ -44,9 +44,10 @@ namespace Company.G02.PL.Controllers
                   CreatedAt = model.CreatedAt,
                 };
               var count= _departmentRepository.Add(department);
-                if (count > 0) 
+                if (count > 0)
                 {
-                  return RedirectToAction(nameof(Index));
+                    TempData["Message"] = "Department is created";
+                    return RedirectToAction(nameof(Index));
                 }
             }
             return View(model);
