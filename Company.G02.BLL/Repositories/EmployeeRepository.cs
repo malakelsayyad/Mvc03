@@ -1,6 +1,7 @@
 ﻿using Company.G02.BLL.Interfaces;
 using Company.G02.DAL.Data.Context;
 using Company.G02.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,11 @@ namespace Company.G02.BLL.Repositories
 {
     public class EmployeeRepository : GenericRepository<Employee> ,IEmployeeRepository
     {
+        private readonly CompanyDbContext _context;
+
         public EmployeeRepository(CompanyDbContext context):base(context) //Ask Clr To make an object from CompanyDbContext
         {
-            
+            _context = context;
         }
         //private readonly CompanyDbContext _context;
 
@@ -46,5 +49,10 @@ namespace Company.G02.BLL.Repositories
         //    _context.Employees.Remove(employee);
         //    return _context.SaveChanges();
         //}
+
+        public List<Employee> GetByName(string name)
+        {
+            return _context.Employees.Include(E=>E.Department).Where(E=>E.Name.ToLower().Contains(name.ToLower())).ToList();
+        }
     }
 }

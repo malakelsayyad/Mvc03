@@ -6,7 +6,7 @@
 <h1>Delete Employee </h1>
 <br />
 <br />
-<form asp-action="Delete">
+<form asp-action="Delete" asp-route-id="@Model.Id">
     <partial name="EmployeePartialView/_DeleteDetailsPartialView" />
 
     <div class="my-3 ">
