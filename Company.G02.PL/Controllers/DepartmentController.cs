@@ -1,4 +1,5 @@
-﻿using Company.G02.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Models;
 using Company.G02.DAL.Models.Dtos;
@@ -11,11 +12,14 @@ namespace Company.G02.PL.Controllers
     public class DepartmentController : Controller
     {
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
+
         //Ask Clr to create an object from DepartmentRepository
-        public DepartmentController(IDepartmentRepository departmentRepository)
+        public DepartmentController(IDepartmentRepository departmentRepository,IMapper mapper)
 
         {
             _departmentRepository=departmentRepository;
+            _mapper = mapper;
         }
 
         [HttpGet] // Get : /Department/Index
@@ -36,14 +40,15 @@ namespace Company.G02.PL.Controllers
         public IActionResult Create(CreateDepartmentDto model)
         {
             if ( ModelState.IsValid) //Server side validation
-            {   
-                var department=new Department() 
-                {
-                  Code = model.Code,
-                  Name = model.Name,
-                  CreatedAt = model.CreatedAt,
-                };
-              var count= _departmentRepository.Add(department);
+            {
+                //var department=new Department() 
+                //{
+                //  Code = model.Code,
+                //  Name = model.Name,
+                //  CreatedAt = model.CreatedAt,
+                //};
+                var department = _mapper.Map<Department>(model);
+                var count= _departmentRepository.Add(department);
                 if (count > 0)
                 {
                     TempData["Message"] = "Department is created";
@@ -75,7 +80,9 @@ namespace Company.G02.PL.Controllers
             if (id is null) return BadRequest("Invalid Id");
             var department = _departmentRepository.GetById(id.Value);
             if (department is null) return NotFound(new { statusCode = 404, message = $"Department with id {id} is not found" });
-            return View(viewName,department);
+            var dto = _mapper.Map<CreateDepartmentDto>(department);
+
+            return View(viewName,dto);
         }
 
         [HttpGet]
@@ -85,12 +92,14 @@ namespace Company.G02.PL.Controllers
             var department = _departmentRepository.GetById(id.Value);
             if (department is null) return NotFound(new { statusCode = 404, message = $"department with id {id} is not found" });
 
-            var departmentDto = new CreateDepartmentDto()
-            {
-                Code=department.Code,
-                Name = department.Name,
-                CreatedAt=department.CreatedAt,
-            };
+            //var departmentDto = new CreateDepartmentDto()
+            //{
+            //    Code=department.Code,
+            //    Name = department.Name,
+            //    CreatedAt=department.CreatedAt,
+            //};
+            var departmentDto = _mapper.Map<CreateDepartmentDto>(department);
+
             return View(departmentDto);
         }
 
@@ -100,13 +109,15 @@ namespace Company.G02.PL.Controllers
             if (ModelState.IsValid)
             {
                 //if (id != employee.Id) return BadRequest();
-                var department = new Department()
-                {
-                    Id = id,
-                    Name = model.Name,
-                    Code = model.Code,
-                    CreatedAt = model.CreatedAt,
-                };
+                //var department = new Department()
+                //{
+                //    Id = id,
+                //    Name = model.Name,
+                //    Code = model.Code,
+                //    CreatedAt = model.CreatedAt,
+                //};
+                var department =_mapper.Map<Department>(model);
+                department.Id = id;
                 var count = _departmentRepository.Update(department);
                 if (count > 0)
                 {
@@ -149,18 +160,27 @@ namespace Company.G02.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Department department)
+        public IActionResult Delete([FromRoute] int id, CreateDepartmentDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != department.Id) return BadRequest();
+                //if (id != department.Id) return BadRequest();
+                //var department = new Department()
+                //{
+                //    Id = id,
+                //    Name = model.Name,
+                //    Code = model.Code,
+                //    CreatedAt = model.CreatedAt,
+                //};
+                var department = _mapper.Map<Department>(model);
+                department.Id = id;
                 var count = _departmentRepository.Delete(department);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
-            return View(department);
+            return View(model);
         }
 
     }
