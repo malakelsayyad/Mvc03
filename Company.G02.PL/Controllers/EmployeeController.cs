@@ -28,15 +28,15 @@ namespace Company.G02.PL.Controllers
         [HttpGet] // Get : /Department/Index
         public IActionResult Index(string? SearchInput)
         {
-             IEnumerable<Employee> employees;
+            IEnumerable<Employee> employees;
             if (string.IsNullOrEmpty(SearchInput))
             {
-                 employees = _employeeRepository.GetAll();
+                employees = _employeeRepository.GetAll();
 
             }
             else
-            { 
-              employees = _employeeRepository.GetByName(SearchInput);
+            {
+                employees = _employeeRepository.GetByName(SearchInput);
             }
             // Dictionary : 3 Properties
             // 1.ViewData : Transfer Extra Info from controller to view
@@ -53,7 +53,7 @@ namespace Company.G02.PL.Controllers
         public IActionResult Create()
         {
             var departments = _departmentRepository.GetAll();
-            ViewData["departments"]= departments;
+            ViewData["departments"] = departments;
             return View();
         }
 
@@ -95,8 +95,9 @@ namespace Company.G02.PL.Controllers
             if (id is null) return BadRequest("Invalid Id");
             var employee = _employeeRepository.GetById(id.Value);
             if (employee is null) return NotFound(new { statusCode = 404, message = $"Employee with id {id} is not found" });
-            
-            return View(viewName, employee);
+
+            var dto = _mapper.Map<CreateEmployeeDto>(employee);
+            return View(viewName, dto);
         }
 
         [HttpGet]
@@ -133,20 +134,24 @@ namespace Company.G02.PL.Controllers
             if (ModelState.IsValid)
             {
                 //if (id != employee.Id) return BadRequest();
-                var employee = new Employee()
-                {   Id=id,
-                    Name = model.EmpName,
-                    Address = model.Address,
-                    Age = model.Age,
-                    CreatedAt = model.CreatedAt,
-                    HiringDate = model.HiringDate,
-                    Email = model.Email,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    Phone = model.Phone,
-                    Salary = model.Salary,
-                    DepartmentId = model.DepartmentId,
-                };
+                //var employee = new Employee()
+                //{   Id=id,
+                //    Name = model.Name,
+                //    Address = model.Address,
+                //    Age = model.Age,
+                //    CreatedAt = model.CreatedAt,
+                //    HiringDate = model.HiringDate,
+                //    Email = model.Email,
+                //    IsActive = model.IsActive,
+                //    IsDeleted = model.IsDeleted,
+                //    Phone = model.Phone,
+                //    Salary = model.Salary,
+                //    DepartmentId = model.DepartmentId,
+                //};
+               
+                var employee = _mapper.Map<Employee>(model);
+                employee.Id = id;
+
                 var count = _employeeRepository.Update(employee);
                 if (count > 0)
                 {
@@ -189,18 +194,20 @@ namespace Company.G02.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Employee employee)
+        public IActionResult Delete([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != employee.Id) return BadRequest();
+                //if (id != employee.Id) return BadRequest();
+                var employee = _mapper.Map<Employee>(model);
+                employee.Id = id;
                 var count = _employeeRepository.Delete(employee);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
-            return View(employee);
+            return View(model);
         }
 
     }

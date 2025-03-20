@@ -2,8 +2,8 @@
 
 @{
     ViewData["Title"] = "Index";
-    string? ViewDataMessage = ViewData["Message"] as string;
-    string? ViewBagMessage = ViewBag.Message;
+    //string? ViewDataMessage = ViewData["Message"] as string;
+    //string? ViewBagMessage = ViewBag.Message;
 }
 
 <h1>All Employees</h1>
@@ -11,12 +11,12 @@
 <br />
 <br />
 
-@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+@* @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
     <div class="m-3 alert alert-info">
         <p>@TempData["Message"]</p>
     </div>
-}
+} *@
 
 <form asp-action="Index" method="get">
     <div class="container m-4">
