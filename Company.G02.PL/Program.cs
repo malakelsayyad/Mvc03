@@ -1,3 +1,4 @@
+using Company.G02.BLL;
 using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Data.Context;
@@ -19,6 +20,7 @@ namespace Company.G02.PL
             
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();//Allows Dependancy Injection for DepartmentRepository
             builder.Services.AddScoped<IEmployeeRepository,EmployeeRepository>();//Allows Dependancy Injection for EmployeeRepository
+            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();//Allows Dependancy Injection for EmployeeRepository
 
             builder.Services.AddDbContext<CompanyDbContext>(options => 
             {
