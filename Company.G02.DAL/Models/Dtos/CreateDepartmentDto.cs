@@ -9,6 +9,7 @@ namespace Company.G02.DAL.Models.Dtos
 {
     public class CreateDepartmentDto
     {
+        public int Id { get; set; }
         [Required(ErrorMessage ="Code is required!")]
         public string Code { get; set; }
 
