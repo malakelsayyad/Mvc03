@@ -2,8 +2,10 @@ using Company.G02.BLL;
 using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Data.Context;
+using Company.G02.DAL.Models;
 using Company.G02.PL.Mapping;
 using Company.G02.PL.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -40,6 +42,14 @@ namespace Company.G02.PL
             builder.Services.AddAutoMapper(M=>M.AddProfile(new EmployeeProfile()));
             builder.Services.AddAutoMapper(M=>M.AddProfile(new DepartmentProfile()));
 
+            builder.Services.AddIdentity<AppUser,IdentityRole>()
+                            .AddEntityFrameworkStores<CompanyDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(config => 
+            {
+                config.LoginPath = "/Account/SignIn";
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -55,7 +65,8 @@ namespace Company.G02.PL
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
