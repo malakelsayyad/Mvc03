@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace Company.G02.DAL.Models.Dtos
 {
     public class CreateEmployeeDto
-    {   
+    {
+        public int Id { get; set; }
 
         [Required(ErrorMessage ="Name is required !")]
         public string Name { get; set; }
