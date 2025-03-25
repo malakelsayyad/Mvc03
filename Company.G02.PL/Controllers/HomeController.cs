@@ -2,10 +2,12 @@ using System.Diagnostics;
 using System.Text;
 using Company.G02.PL.Models;
 using Company.G02.PL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.G02.PL.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

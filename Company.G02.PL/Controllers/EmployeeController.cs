@@ -4,9 +4,11 @@ using Company.G02.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Company.G02.PL.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Company.G02.PL.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         //private readonly IEmployeeRepository _employeeRepository;
