@@ -1,0 +1,15 @@
+﻿@model UserToReturnDto
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<div>
+    <partial name="UserPartialView/_DeleteDetailsPartialView" />
+
+    <div class="my-3 ">
+        <a asp-controller="User" asp-route-id="@Model.Id" asp-action="Edit"  class="btn btn-warning">Edit</a>
+        <a asp-controller="User" asp-action="Index" class="btn btn-light">Back To List</a>
+
+    </div>
+</div>
