@@ -1,0 +1,20 @@
+﻿@model UserToReturnDto
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+<br />
+
+<form asp-action="Edit" enctype="multipart/form-data">
+        <partial name="UserPartialView/_CreateEditPartialView" />
+        <div class="my-3 ">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-controller="User" asp-action="Index" class="btn btn-light">Back To List</a>
+        </div>
+</form>
+@section ValidationsSection
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
