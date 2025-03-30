@@ -3,8 +3,10 @@ using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Data.Context;
 using Company.G02.DAL.Models;
+using Company.G02.PL.Helpers;
 using Company.G02.PL.Mapping;
 using Company.G02.PL.Services;
+using Company.G02.PL.Services.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -19,12 +21,12 @@ namespace Company.G02.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();//Register built-in mvc services
-            
-            builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();//Allows Dependancy Injection for DepartmentRepository
-            builder.Services.AddScoped<IEmployeeRepository,EmployeeRepository>();//Allows Dependancy Injection for EmployeeRepository
-            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();//Allows Dependancy Injection for EmployeeRepository
 
-            builder.Services.AddDbContext<CompanyDbContext>(options => 
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();//Allows Dependancy Injection for DepartmentRepository
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();//Allows Dependancy Injection for EmployeeRepository
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();//Allows Dependancy Injection for EmployeeRepository
+
+            builder.Services.AddDbContext<CompanyDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });//Allows Dependancy Injection for CompanyDbContext
@@ -39,17 +41,25 @@ namespace Company.G02.PL
             //builder.Services.AddSingleton<ISingletonService, SingletonService>();// Per App
 
             //builder.Services.AddAutoMapper(typeof(EmployeeProfile));
-            builder.Services.AddAutoMapper(M=>M.AddProfile(new EmployeeProfile()));
-            builder.Services.AddAutoMapper(M=>M.AddProfile(new DepartmentProfile()));
+            builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+            builder.Services.AddAutoMapper(M => M.AddProfile(new DepartmentProfile()));
 
-            builder.Services.AddIdentity<AppUser,IdentityRole>()
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
                             .AddEntityFrameworkStores<CompanyDbContext>()
                             .AddDefaultTokenProviders();
 
-            builder.Services.ConfigureApplicationCookie(config => 
+            builder.Services.ConfigureApplicationCookie(config =>
             {
                 config.LoginPath = "/Account/SignIn";
+
             });
+
+            //builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
+
+            builder.Services.Configure<MailSettingsWorkshop>(builder.Configuration.GetSection(nameof(MailSettingsWorkshop)));
+
+            builder.Services.AddTransient<ISMSService, SMSService>();
+            builder.Services.AddTransient<IMailSettingsWorkshop, EmailSettingsWorkshop>();
 
             var app = builder.Build();
 

@@ -51,11 +51,29 @@ namespace Company.G02.PL.Controllers
             // 2.ViewBag : Transfer Extra Info from controller to view
             //ViewBag.Message = new { Message = "Hello from ViewBag" };
 
-
-
             return View(employees);
         }
+
+        public async Task<IActionResult> Search(string? SearchInput)
+        {
+            IEnumerable<Employee> employees;
+
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                employees = await _unitOfWork.EmployeeRepository.GetAllAsync();
+            }
+            else
+            {
+                employees = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
+            }
+
+
+            return PartialView("EmployeePartialView/EmployeeTablePartialView", employees);
+        }
+
+
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
@@ -85,13 +103,13 @@ namespace Company.G02.PL.Controllers
                 //};
                 if (model.Image is not null)
                 {
-                 model.ImageName= DocumentSettings.UploadFile(model.Image, "Images");
+                    model.ImageName = DocumentSettings.UploadFile(model.Image, "Images");
 
                 }
 
                 var employee = _mapper.Map<Employee>(model);
                 await _unitOfWork.EmployeeRepository.AddAsync(employee);
-                 
+
                 var count = await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
@@ -112,6 +130,8 @@ namespace Company.G02.PL.Controllers
             var dto = _mapper.Map<CreateEmployeeDto>(employee);
             return View(viewName, dto);
         }
+
+        [Authorize(Roles = "Admin")]
 
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
@@ -162,8 +182,8 @@ namespace Company.G02.PL.Controllers
                 //    Salary = model.Salary,
                 //    DepartmentId = model.DepartmentId,
                 //};
-               
-                if(model.ImageName is not null && model.Image is not null)
+
+                if (model.ImageName is not null && model.Image is not null)
                 {
                     DocumentSettings.DeleteFile(model.ImageName, "Images");
                 }
@@ -177,8 +197,8 @@ namespace Company.G02.PL.Controllers
                 var employee = _mapper.Map<Employee>(model);
                 employee.Id = id;
 
-                 _unitOfWork.EmployeeRepository.Update(employee);
-                 var count = await _unitOfWork.CompleteAsync();
+                _unitOfWork.EmployeeRepository.Update(employee);
+                var count = await _unitOfWork.CompleteAsync();
 
                 if (count > 0)
                 {
@@ -210,6 +230,7 @@ namespace Company.G02.PL.Controllers
         //    return View(updateDepartment);
         //}
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public Task<IActionResult> Delete(int? id)
         {
@@ -228,14 +249,14 @@ namespace Company.G02.PL.Controllers
                 //if (id != employee.Id) return BadRequest();
                 var employee = _mapper.Map<Employee>(model);
                 employee.Id = id;
-                 _unitOfWork.EmployeeRepository.Delete(employee);
+                _unitOfWork.EmployeeRepository.Delete(employee);
                 var count = await _unitOfWork.CompleteAsync();
 
                 if (count > 0)
                 {
                     if (model.ImageName is not null)
-                    { 
-                       DocumentSettings.DeleteFile(model.ImageName, "Images");
+                    {
+                        DocumentSettings.DeleteFile(model.ImageName, "Images");
                     }
                     return RedirectToAction(nameof(Index));
                 }
