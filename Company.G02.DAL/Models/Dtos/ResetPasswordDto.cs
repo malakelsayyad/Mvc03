@@ -14,4 +14,4 @@ namespace Company.G02.DAL.Models.Dtos
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
     }
-
+}
