@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Company.G02.PL.Helpers;
 using Company.G02.PL.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Company.G02.PL.Controllers
 {
@@ -13,7 +14,7 @@ namespace Company.G02.PL.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
 
-        public RoleController(RoleManager<IdentityRole> roleManager,UserManager<AppUser> userManager)
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -30,7 +31,7 @@ namespace Company.G02.PL.Controllers
                 {
                     Id = U.Id,
                     Name = U.Name,
-                   
+
                 });
 
             }
@@ -40,13 +41,14 @@ namespace Company.G02.PL.Controllers
                 {
                     Id = U.Id,
                     Name = U.Name,
-                    
+
                 }).Where(U => U.Name.ToLower().Contains(SearchInput));
             }
 
             return View(users);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             return View();
@@ -61,10 +63,10 @@ namespace Company.G02.PL.Controllers
 
                 if (role is null)
                 {
-                  role= new IdentityRole() 
-                  { 
-                    Name = model.Name,
-                  };
+                    role = new IdentityRole()
+                    {
+                        Name = model.Name,
+                    };
                 }
                 var result = await _roleManager.CreateAsync(role);
                 if (result.Succeeded)
@@ -75,6 +77,7 @@ namespace Company.G02.PL.Controllers
             }
             return View(model);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Details(string? id, string viewName = "Details")
@@ -87,11 +90,12 @@ namespace Company.G02.PL.Controllers
             {
                 Id = role.Id,
                 Name = role.Name,
-                
+
             };
             return View(viewName, dto);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(string? id)
         {
@@ -118,8 +122,8 @@ namespace Company.G02.PL.Controllers
                     if (result.Succeeded)
                         return RedirectToAction(nameof(Index));
                 }
-                ModelState.AddModelError("","Invalid operation");
-               
+                ModelState.AddModelError("", "Invalid operation");
+
             }
             return View(model);
         }
@@ -146,6 +150,7 @@ namespace Company.G02.PL.Controllers
         //    return View(updateDepartment);
         //}
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public Task<IActionResult> Delete(string? id)
         {
@@ -167,10 +172,10 @@ namespace Company.G02.PL.Controllers
                 if (role is null) return BadRequest("Invalid operation");
 
                 var result = await _roleManager.DeleteAsync(role);
-                
+
                 if (result.Succeeded)
                     return RedirectToAction(nameof(Index));
-                
+
                 ModelState.AddModelError("", "Invalid operation");
 
             }
@@ -178,23 +183,24 @@ namespace Company.G02.PL.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> AddOrRemoveUsers(string roleId)
         {
-            var role= await _roleManager.FindByIdAsync(roleId);
+            var role = await _roleManager.FindByIdAsync(roleId);
             if (role is null) return NotFound();
 
             ViewData["RoleId"] = roleId;
 
             var usersInRole = new List<UsersInRoleViewModel>();
-            var users= await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users.ToListAsync();
 
-            foreach (var user in users) 
+            foreach (var user in users)
             {
-                var userInRole = new UsersInRoleViewModel() 
+                var userInRole = new UsersInRoleViewModel()
                 {
-                  UserId = user.Id,
-                  UserName=user.UserName,
+                    UserId = user.Id,
+                    UserName = user.UserName,
                 };
                 if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
@@ -212,7 +218,7 @@ namespace Company.G02.PL.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddOrRemoveUsers(string roleId, List<UsersInRoleViewModel>users)
+        public async Task<IActionResult> AddOrRemoveUsers(string roleId, List<UsersInRoleViewModel> users)
         {
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role is null) return NotFound();
@@ -225,7 +231,7 @@ namespace Company.G02.PL.Controllers
                     var appUser = await _userManager.FindByIdAsync(user.UserId);
                     if (appUser is not null)
                     {
-                        if (user.IsSelected && ! await _userManager.IsInRoleAsync(appUser, role.Name))
+                        if (user.IsSelected && !await _userManager.IsInRoleAsync(appUser, role.Name))
                         {
                             await _userManager.AddToRoleAsync(appUser, role.Name);
                         }
@@ -235,7 +241,7 @@ namespace Company.G02.PL.Controllers
                         }
                     }
                 }
-                return RedirectToAction(nameof(Edit), new { id=roleId });
+                return RedirectToAction(nameof(Edit), new { id = roleId });
             }
 
             return View(users);
