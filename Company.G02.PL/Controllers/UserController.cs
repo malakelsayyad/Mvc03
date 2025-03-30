@@ -1,6 +1,7 @@
 ﻿using Company.G02.DAL.Models;
 using Company.G02.DAL.Models.Dtos;
 using Company.G02.PL.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,17 +20,17 @@ namespace Company.G02.PL.Controllers
         public async Task<IActionResult> Index(string? SearchInput)
         {
             IEnumerable<UserToReturnDto> users;
-            
+
             if (string.IsNullOrEmpty(SearchInput))
             {
-                users= _userManager.Users.Select(U=> new UserToReturnDto()
+                users = _userManager.Users.Select(U => new UserToReturnDto()
                 {
-                    Id=U.Id,
+                    Id = U.Id,
                     UserName = U.UserName,
                     Email = U.Email,
                     FirstName = U.FirstName,
                     LastName = U.LastName,
-                    Roles =  _userManager.GetRolesAsync(U).Result
+                    Roles = _userManager.GetRolesAsync(U).Result
                 });
 
             }
@@ -43,7 +44,7 @@ namespace Company.G02.PL.Controllers
                     FirstName = U.FirstName,
                     LastName = U.LastName,
                     Roles = _userManager.GetRolesAsync(U).Result
-                }).Where(U=>U.FirstName.ToLower().Contains(SearchInput));
+                }).Where(U => U.FirstName.ToLower().Contains(SearchInput));
             }
 
             return View(users);
@@ -56,24 +57,26 @@ namespace Company.G02.PL.Controllers
             var user = await _userManager.FindByIdAsync(id);
             if (user is null) return NotFound(new { statusCode = 404, message = $"User with id {id} is not found" });
 
-            var dto = new UserToReturnDto() 
-            { 
-               Id=user.Id,
-               UserName=user.UserName,
-               Email=user.Email,
-               FirstName=user.FirstName,
-               LastName=user.LastName,
-               Roles=  _userManager.GetRolesAsync(user).Result
+            var dto = new UserToReturnDto()
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Roles = _userManager.GetRolesAsync(user).Result
             };
             return View(viewName, dto);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(string? id)
         {
-          return await Details(id,"Edit");
+            return await Details(id, "Edit");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit([FromRoute] string id, UserToReturnDto model)
         {
@@ -88,12 +91,12 @@ namespace Company.G02.PL.Controllers
                 user.LastName = model.LastName;
                 user.Email = model.Email;
 
-              var result= await _userManager.UpdateAsync(user);
+                var result = await _userManager.UpdateAsync(user);
 
                 if (result.Succeeded)
                     return RedirectToAction(nameof(Index));
             }
-           return View(model);
+            return View(model);
         }
 
         //[HttpPost]
@@ -118,6 +121,7 @@ namespace Company.G02.PL.Controllers
         //    return View(updateDepartment);
         //}
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public Task<IActionResult> Delete(string? id)
         {
