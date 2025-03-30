@@ -68,6 +68,7 @@ namespace Company.G02.PL
                  IConfiguration googleAuth = builder.Configuration.GetSection("Authentication:Google");
                  options.ClientId = googleAuth["ClientId"];
                  options.ClientSecret = googleAuth["ClientSecret"];
+
               });
 
             //builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
