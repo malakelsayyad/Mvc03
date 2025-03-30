@@ -20,14 +20,14 @@
 
 <form asp-action="Index" method="get">
     <div class="container m-4">
-      <div class="row">
+        <div class="row">
             <div class="col-md-6">
                 <input id="SearchInput" name="SearchInput" class="form-control " />
             </div>
             <div class="col-md-6">
                 <input type="submit" class="btn btn-success  col-md-3" value="Search" />
             </div>
-      </div>
+        </div>
     </div>
 </form>
 
@@ -59,8 +59,8 @@
                 <th>Salary</th>
                 <th>IsActive</th>
                 <th>IsDeleted</th>
-                <th>@Html.DisplayNameFor(E=>E.HiringDate)</th>
-                <th>@Html.DisplayNameFor(E=>E.CreatedAt)</th>
+                <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
+                <th>@Html.DisplayNameFor(E => E.CreatedAt)</th>
                 <th>Department</th>
                 <th>Details</th>
                 <th>Update</th>
@@ -79,14 +79,14 @@
                     <td>@item.Email</td>
                     <td>@item.Address</td>
                     <td>@item.Phone</td>
-                    <td>@Html.DisplayFor(m=>item.Salary)</td>
+                    <td>@Html.DisplayFor(m => item.Salary)</td>
                     <td>@item.IsActive</td>
                     <td>@item.IsDeleted</td>
                     <td>@item.HiringDate</td>
                     <td>@item.CreatedAt</td>
                     <td>@(item.Department?.Name ?? "No Department")</td>
-                    <partial name="_ButtonPartialView" model=@item.Id.ToString()/>
-                   
+                    <partial name="_ButtonPartialView" model=@item.Id.ToString() />
+
                 </tr>
             }
         </tbody>
@@ -100,3 +100,26 @@ else
         </h4>
     </div>
 }
+
+<script>
+    $(document).ready(function () {
+        const searchBar = $('#SearchInput');
+        const table = $('table');
+
+        searchBar.on('keyup', function (event) {
+            var searchValue = searchBar.val();
+
+            $.ajax({
+                url: '/Employee/Search',
+                type: 'Get',
+                data: { SearchInput: searchValue },
+                success: function (result) {
+                    table.html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>

@@ -1,9 +1,8 @@
-﻿using Company.G02.PL.Services.Settings;
+using Company.G02.PL.Services.Settings;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System.Net.Mail;
 
 namespace Company.G02.PL.Helpers
 {
