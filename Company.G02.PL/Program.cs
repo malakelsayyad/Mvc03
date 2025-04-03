@@ -8,6 +8,7 @@ using Company.G02.PL.Mapping;
 using Company.G02.PL.Services;
 using Company.G02.PL.Services.Settings;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -55,20 +56,20 @@ namespace Company.G02.PL
 
             });
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-              .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-              {
-                options.LoginPath = "/Account/SignIn";
-                options.ExpireTimeSpan = TimeSpan.FromDays(3);
-                options.AccessDeniedPath = "/Home/Error";
+            builder.Services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
 
-              })
-              .AddGoogle(options =>
-              {
-                 IConfiguration googleAuth = builder.Configuration.GetSection("Authentication:Google");
-                 options.ClientId = googleAuth["ClientId"];
-                 options.ClientSecret = googleAuth["ClientSecret"];
-              });
+                o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            }
+            ).AddGoogle(o =>
+            {
+               
+
+                o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+
+            });
 
             //builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
 
