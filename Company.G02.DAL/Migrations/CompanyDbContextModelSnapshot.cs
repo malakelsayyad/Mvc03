@@ -4,19 +4,16 @@ using Company.G02.DAL.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Company.G02.DAL.Data.Migrations
+namespace Company.G02.DAL.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20250325130217_AddIdentityTables")]
-    partial class AddIdentityTables
+    partial class CompanyDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,6 +96,24 @@ namespace Company.G02.DAL.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "4EA19E03-C84D-453C-A6B2-CF3A9981F594",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "bc2e710e-766c-4054-9e69-9b4cb6c8be46",
+                            Email = "malakelsayyad@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "malak",
+                            IsAgree = false,
+                            LastName = "elsayyad",
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAIAAYagAAAAEJC2O18ue5iizJSCG18MKdJMBf1b2cGgFrYrJC0QVLYATSg4xvQUCqxHSZCqIPeMiQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "b10f35f2-d117-4dd1-8757-102e8af66a3b",
+                            TwoFactorEnabled = false
+                        });
                 });
 
             modelBuilder.Entity("Company.G02.DAL.Models.Department", b =>
@@ -205,6 +220,20 @@ namespace Company.G02.DAL.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "C4D17A15-B5A6-41BD-9B6E-B10F86CB48EE",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "E11E65D8-18C4-493F-AF19-4A3B80F8AC01",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -292,6 +321,13 @@ namespace Company.G02.DAL.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "4EA19E03-C84D-453C-A6B2-CF3A9981F594",
+                            RoleId = "C4D17A15-B5A6-41BD-9B6E-B10F86CB48EE"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
