@@ -5,10 +5,9 @@ using Company.G02.DAL.Data.Context;
 using Company.G02.DAL.Models;
 using Company.G02.PL.Helpers;
 using Company.G02.PL.Mapping;
-using Company.G02.PL.Services;
 using Company.G02.PL.Services.Settings;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -57,16 +56,16 @@ namespace Company.G02.PL
             });
 
             builder.Services.AddAuthentication(options =>
-              {
-              options.DefaultScheme = IdentityConstants.ApplicationScheme;
-              options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-              })
-               .AddGoogle(googleOptions =>
-                {
-                   googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                   googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-                });
-            
+            {
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+            .AddGoogle(googleOptions =>
+            {
+               googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+               googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
+
             //builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
 
             builder.Services.Configure<MailSettingsWorkshop>(builder.Configuration.GetSection(nameof(MailSettingsWorkshop)));
