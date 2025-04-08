@@ -56,21 +56,17 @@ namespace Company.G02.PL
 
             });
 
-            builder.Services.AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
-
-                o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-            }
-            ).AddGoogle(o =>
-            {
-               
-
-                o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-
-            });
-
+            builder.Services.AddAuthentication(options =>
+              {
+              options.DefaultScheme = IdentityConstants.ApplicationScheme;
+              options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+              })
+               .AddGoogle(googleOptions =>
+                {
+                   googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                   googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                });
+            
             //builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
 
             builder.Services.Configure<MailSettingsWorkshop>(builder.Configuration.GetSection(nameof(MailSettingsWorkshop)));
