@@ -1,4 +1,4 @@
-﻿using Company.G02.DAL.Models;
+using Company.G02.DAL.Models;
 using Company.G02.DAL.Models.Dtos;
 using Company.G02.PL.Helpers;
 using Microsoft.AspNetCore.Authentication;
