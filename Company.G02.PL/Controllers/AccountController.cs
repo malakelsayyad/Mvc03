@@ -285,7 +285,7 @@ namespace Company.G02.PL.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost] 
         public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
         {
             if (ModelState.IsValid)
