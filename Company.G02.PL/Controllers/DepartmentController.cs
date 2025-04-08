@@ -37,12 +37,13 @@ namespace Company.G02.PL.Controllers
             return View(departments);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateDepartmentDto model)
         {

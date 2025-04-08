@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
+using System.Security.Claims;
 
 namespace Company.G02.PL.Controllers
 {
@@ -119,28 +120,56 @@ namespace Company.G02.PL.Controllers
 
         public IActionResult GoogleLogin()
         {
-            var prop = new AuthenticationProperties()
+            var props = new AuthenticationProperties
             {
                 RedirectUri = Url.Action("GoogleResponse")
             };
 
-            return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+            return Challenge(props, GoogleDefaults.AuthenticationScheme);
         }
 
+
+
+        [HttpGet]
         public async Task<IActionResult> GoogleResponse()
         {
             var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
-            var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(
-                claim => new
+
+            if (!result.Succeeded)
+                return RedirectToAction("SignIn");
+
+            var email = result.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value;
+            var fullName = result.Principal.Identity?.Name;
+            var names = fullName?.Split(' ') ?? new[] { "GoogleUser" };
+
+            var firstName = names.FirstOrDefault() ?? "Google";
+            var lastName = names.Skip(1).FirstOrDefault() ?? "User";
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                user = new AppUser
                 {
-                    claim.Issuer,
-                    claim.OriginalIssuer,
-                    claim.Type,
-                    claim.Value
+                    Email = email,
+                    UserName = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    EmailConfirmed = true
+                };
+
+                var createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded)
+                {
+                    ModelState.AddModelError("", "Failed to create user from Google login.");
+                    return RedirectToAction("SignIn");
                 }
-                );
+            }
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
             return RedirectToAction("Index", "Home");
         }
+
 
         #endregion
 

@@ -111,7 +111,7 @@ namespace Company.G02.PL.Controllers
 
                 var role = await _roleManager.FindByIdAsync(id);
                 if (role is null) return BadRequest("Invalid operation");
-                var roleResult = await _roleManager.FindByNameAsync(role.Name);
+                var roleResult = await _roleManager.FindByNameAsync(model.Name);
 
                 if (roleResult is null)
                 {

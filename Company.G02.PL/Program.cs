@@ -5,9 +5,7 @@ using Company.G02.DAL.Data.Context;
 using Company.G02.DAL.Models;
 using Company.G02.PL.Helpers;
 using Company.G02.PL.Mapping;
-using Company.G02.PL.Services;
 using Company.G02.PL.Services.Settings;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -56,19 +54,15 @@ namespace Company.G02.PL
 
             });
 
-            builder.Services.AddAuthentication(o =>
+            builder.Services.AddAuthentication(options =>
             {
-                o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
-
-                o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-            }
-            ).AddGoogle(o =>
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+            .AddGoogle(googleOptions =>
             {
-               
-
-                o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-
+               googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+               googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
             });
 
             //builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));

@@ -42,14 +42,17 @@ namespace Company.G02.DAL.Data.Context
                 FirstName="malak",
                 LastName="elsayyad",
                 Email="malakelsayyad@gmail.com",
+                NormalizedEmail="MALAKELSAYYAD@GMAIL.COM",
+                UserName="malakelsayyad",
+                NormalizedUserName="MALAKELSAYYAD",
                 PasswordHash=passwordHasher.HashPassword(null,"12345Malak@")
 
             });
 
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>() {
               
-                RoleId= "C4D17A15-B5A6-41BD-9B6E-B10F86CB48EE",
-              UserId= "4EA19E03-C84D-453C-A6B2-CF3A9981F594"
+               RoleId= "C4D17A15-B5A6-41BD-9B6E-B10F86CB48EE",
+               UserId= "4EA19E03-C84D-453C-A6B2-CF3A9981F594"
 
             });
 
