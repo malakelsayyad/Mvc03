@@ -55,16 +55,22 @@ namespace Company.G02.PL
 
             });
 
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = IdentityConstants.ApplicationScheme;
-                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            })
-            .AddGoogle(googleOptions =>
-            {
-               googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-               googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-            });
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/SignIn"; // Redirect to SignIn if not authenticated
+                })
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                })
+                .AddFacebook(facebookOptions =>
+                {
+                    facebookOptions.ClientId = builder.Configuration["Authentication:Facebook:ClientId"];
+                    facebookOptions.ClientSecret = builder.Configuration["Authentication:Facebook:ClientSecret"];
+                });
+
 
             //builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
 
