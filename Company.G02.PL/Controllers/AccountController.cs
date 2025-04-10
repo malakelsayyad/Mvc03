@@ -2,6 +2,7 @@
 using Company.G02.DAL.Models.Dtos;
 using Company.G02.PL.Helpers;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -128,8 +129,6 @@ namespace Company.G02.PL.Controllers
             return Challenge(props, GoogleDefaults.AuthenticationScheme);
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> GoogleResponse()
         {
@@ -170,7 +169,53 @@ namespace Company.G02.PL.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult FacebookLogin()
+        {
+            var prop = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("FacebookResponse")
+            };
+            return Challenge(prop, FacebookDefaults.AuthenticationScheme);
+        }
 
+       public async Task<IActionResult> FacebookResponse()
+{
+    var result = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme); // Fix to use Facebook's scheme
+
+    if (!result.Succeeded)
+        return RedirectToAction("SignIn");
+
+    var email = result.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value;
+    var fullName = result.Principal.Identity?.Name;
+    var names = fullName?.Split(' ') ?? new[] { "FacebookUser" };
+
+    var firstName = names.FirstOrDefault() ?? "Facebook";
+    var lastName = names.Skip(1).FirstOrDefault() ?? "User";
+
+    var user = await _userManager.FindByEmailAsync(email);
+
+    if (user == null)
+    {
+        user = new AppUser
+        {
+            Email = email,
+            UserName = email,
+            FirstName = firstName,
+            LastName = lastName,
+            EmailConfirmed = true
+        };
+
+        var createResult = await _userManager.CreateAsync(user);
+        if (!createResult.Succeeded)
+        {
+            ModelState.AddModelError("", "Failed to create user from Facebook login.");
+            return RedirectToAction("SignIn");
+        }
+    }
+
+    await _signInManager.SignInAsync(user, isPersistent: false);
+    return RedirectToAction("Index", "Home");
+}
         #endregion
 
         #region SignOut
